@@ -1,9 +1,19 @@
-const botkit = require('botkit');
-const fs = require('fs');
-const tokens = require(__dirname + "/tokens.js");
+const botkit = require('botkit')
+    , fs     = require('fs')
+    , tokens = require(__dirname + "/tokens.js");
 
-const config = require('configly')
-    , cson-parser = require('cson-parser');
+const configly      = require('configly')
+    , cson-parser   = require('cson-parser')
+    , json5         = require('json5');
+
+const config = configly({
+  parsers: { // have it as a wrapper to prevent extra arguments leaking
+             cson: function(str) { return cson.parse(str); }
+           , json: json5.parse
+             // keep the original one
+           , js: configly.parsers.js
+           }
+});
 
 // try {
 //     tokens = require(__dirname + "/tokens.js");
