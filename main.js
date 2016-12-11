@@ -1,10 +1,16 @@
 const botkit = require('botkit')
     , fs     = require('fs')
-    , tokens = require(__dirname + "/tokens.js");
+    , tokens = require(__dirname + "/tokens.js")
+    ;
 
 const configly      = require('configly')
     , cson-parser   = require('cson-parser')
-    , json5         = require('json5');
+    , json5         = require('json5')
+    ;
+
+const _  = require('lodash')
+    , fp = require('lodash/fp')
+    ;
 
 const config = configly({
   parsers: { // have it as a wrapper to prevent extra arguments leaking
