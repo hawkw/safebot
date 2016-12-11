@@ -8,18 +8,27 @@ const configly      = require('configly')
     , json5         = require('json5')
     ;
 
-const _  = require('lodash')
-    , fp = require('lodash/fp')
+const _  = require('lodash/fp')
     ;
 
 const config = configly({
   parsers: { // have it as a wrapper to prevent extra arguments leaking
-             cson: function(str) { return cson.parse(str); }
+             cson: (str) => { return cson.parse(str); }
            , json: json5.parse
              // keep the original one
            , js: configly.parsers.js
            }
 });
+
+// Get the bot's token from either tokens.js or from the config file
+const botToken
+    = _.getOr( config
+             , 'botToken'
+             , _.flow( _.attempt(require, __dirname + "../tokens.js")
+                     , _.get('botToken'))
+             );
+
+const welcomeMessage = _.get(config, 'welcomeMessage');
 
 // try {
 //     tokens = require(__dirname + "/tokens.js");
@@ -33,6 +42,14 @@ const controller = botkit.slackbot();
 controller.spawn({
   token: tokens.botToken
 }).startRTM();
+
+
+if (!_.isNil(newUserMessage)) {
+    // When a new user joins the team, send them a welcome message
+    controller.on('channel_joined', (bot, message) => {
+        // TODO: implement
+    });
+}
 
 // Receives a DM in the format "tell #code install gentoo"
 controller.hears("[tT]ell <#([^\s]*)> (.*)", ['direct_message'], (bot, message) => {
