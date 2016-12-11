@@ -2,6 +2,9 @@ const botkit = require('botkit');
 const fs = require('fs');
 const tokens = require(__dirname + "/tokens.js");
 
+const config = require('configly')
+    , cson-parser = require('cson-parser');
+
 // try {
 //     tokens = require(__dirname + "/tokens.js");
 // } catch (err) {
