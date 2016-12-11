@@ -44,10 +44,20 @@ controller.spawn({
 }).startRTM();
 
 
-if (!_.isNil(newUserMessage)) {
+if (!_.isNil(welcomeMessage)) {
     // When a new user joins the team, send them a welcome message
-    controller.on('channel_joined', (bot, message) => {
-        // TODO: implement
+    controller.on('team_join', (bot, message) => {
+        const id = message.user.id
+        const name = message.user.name
+        bot.startConversation({user: id}, (err, convo) => {
+            if (err) {
+                console.log(err.stack);
+            } else {
+                botlog(message);
+                convo.say(welcomeMessage);
+                console.log(`I welcomed ${name} to the team.`);
+            }
+        }
     });
 }
 
